@@ -1,0 +1,62 @@
+int ledPin1 = 9;
+int ledPin2 = 10;
+int ledPin3 = 11;
+int buttonPin = 8;
+int buttonState = 0;
+int LEDCounter = 0;
+int touched = 0;
+int finished = 0;
+int blinkTime = 100;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  pinMode(ledPin3, OUTPUT);
+  pinMode(buttonPin, INPUT);
+}
+void loop() {
+  buttonState = digitalRead(buttonPin);
+  Serial.println(buttonState);
+  if (buttonState == HIGH) {
+    if (touched == 0) {
+      if (finished == 0) {
+        delay(500);
+        touched = 1;
+        Serial.println(touched);
+        if (LEDCounter == 0) {
+          digitalWrite(ledPin1, HIGH);
+          digitalWrite(ledPin2, LOW);
+          digitalWrite(ledPin3, LOW);
+          LEDCounter++;
+        } else if (LEDCounter == 1) {
+          digitalWrite(ledPin1, LOW);
+          digitalWrite(ledPin2, HIGH);
+          digitalWrite(ledPin3, LOW);
+          LEDCounter++;
+        } else if (LEDCounter == 2) {
+          digitalWrite(ledPin1, LOW);
+          digitalWrite(ledPin2, LOW);
+          digitalWrite(ledPin3, HIGH);
+          LEDCounter = 0;
+          finished = 1;
+        }
+
+      } else {
+        for (int i = 0; i < 10; i++) {
+          digitalWrite(ledPin1, HIGH);
+          digitalWrite(ledPin2, HIGH);
+          digitalWrite(ledPin3, HIGH);
+          delay(blinkTime);
+          digitalWrite(ledPin1, LOW);
+          digitalWrite(ledPin2, LOW);
+          digitalWrite(ledPin3, LOW);
+          delay(blinkTime);
+        }
+        finished = 0;
+      }
+    }
+  } else {
+    touched = 0;
+  }
+}
